@@ -9,51 +9,73 @@ public class ChoosingProblem {
     public static ArrayList<String> data = new ArrayList<>();
     public static int[] begin;
     public static int[] end;
-    public static int maxCount(int n,ArrayList<Integer> outerIndexes){
-        int cnt = 1;
-        int last = 0;
+    public static int maxCount(ArrayList<Integer> outerIndexes){
+        //sort(outerIndexes);
+        int last = outerIndexes.get(0);
         ArrayList<Integer> localIndexes = new ArrayList<>();
+        outerIndexes.remove(0);
         for(int i  : outerIndexes){
             if(begin[i] >= end[last]){
-                cnt++;
                 last = i;
             }else {
                 localIndexes.add(i);
             }
         }
-        outerIndexes.removeAll(localIndexes);
-        return cnt;
+        outerIndexes.clear();
+        outerIndexes.addAll(localIndexes);
+        return 1;
     }
 
-    public static int minCount(int n, ArrayList<Integer> outerIndexes){
-        int cnt = outerIndexes.size();
-        int count = 0;
+    public static int minCount( ArrayList<Integer> outerIndexes){
+        int cnt = 0;
 
-        while(count != outerIndexes.size()) {
-            count = outerIndexes.size();
-            int last = outerIndexes.get(0);
-            ArrayList<Integer> localIndexes = new ArrayList<>();
-
-            if(count == localIndexes.size()){
-                cnt+=localIndexes.size();
-                break;
-            }else {
-                cnt++;
-            }
-            outerIndexes.clear();
-            outerIndexes.addAll(localIndexes);
+        while(!outerIndexes.isEmpty()) {
+            maxCount(outerIndexes);
+            cnt++;
         }
-
         return cnt;
     }
+
+    public static int minCount2(){
+        int n = begin.length;
+        boolean[] isUsed = new boolean[n];
+        int last = 0;
+        int cnt = 1;
+        for(int i = 0; i < n; i++){
+            isUsed[i] = false;
+        }
+        boolean allTrue = true;
+        while(true){
+            for(int i = 1; i < n; i++){
+                if(!isUsed[i]){
+                    if(begin[i] >= end[last]){
+                        last = i;
+                        isUsed[i] = true;
+                    }
+                }
+            }
+            for (int i = 0; i < n; i++){
+                if(!isUsed[i]){
+                    allTrue = false;
+                    last = i;
+                    break;
+                }
+            }
+            if(allTrue)break;
+            allTrue = true;
+            cnt++;
+        }
+        return cnt;
+
+    }
+
     public static void main(String args[]) {
         try {
             Scanner scanner;
             int n;
-            for(int k = 0; k < 2; k++){
+            for(int k = 0; k < 3; k++){
                 scanner = new Scanner(new FileReader("choosing"+(k+1)+".txt"));
                 n = Integer.parseInt(scanner.nextLine());
-                System.out.println(n);
                 begin = new int[n];
                 end = new int[n];
                 data = new ArrayList<>();
@@ -73,7 +95,7 @@ public class ChoosingProblem {
                     outerIndexes.add(i);
                 }
 
-                System.out.println("Result#"+(k+1)+": "+maxCount(n) + " " + minCount(n,outerIndexes));
+                System.out.println("Result#"+(k+1)+": "+ minCount(outerIndexes));
 
             }
 
