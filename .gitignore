@@ -16,7 +16,7 @@
 *.iws
 *.iml
 *.ipr
-\out\
+/Week2/Percolation/out/
 
 ### NetBeans ###
 /nbproject/private/
