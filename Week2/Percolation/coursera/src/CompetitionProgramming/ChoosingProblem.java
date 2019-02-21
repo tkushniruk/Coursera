@@ -9,31 +9,35 @@ public class ChoosingProblem {
     public static ArrayList<String> data = new ArrayList<>();
     public static int[] begin;
     public static int[] end;
-    public static int maxCount(ArrayList<Integer> outerIndexes){
+    public static ArrayList<Integer> outerIndexes;
+    public static int maxCount(){
         //sort(outerIndexes);
-        int last = outerIndexes.get(0);
+        int last = outerIndexes.remove(0);
+        int cnt = 1;
         ArrayList<Integer> localIndexes = new ArrayList<>();
-        outerIndexes.remove(0);
         for(int i  : outerIndexes){
             if(begin[i] >= end[last]){
                 last = i;
+                cnt++;
             }else {
                 localIndexes.add(i);
             }
         }
-        outerIndexes.clear();
-        outerIndexes.addAll(localIndexes);
-        return 1;
+        outerIndexes = localIndexes;
+        if(cnt == 1) return 0;
+        return cnt;
     }
 
-    public static int minCount( ArrayList<Integer> outerIndexes){
-        int cnt = 0;
+    public static int minCount(){
+        int cnt = outerIndexes.size();
 
-        while(!outerIndexes.isEmpty()) {
-            maxCount(outerIndexes);
-            cnt++;
+        while(true) {
+            cnt -= maxCount();
+            if(outerIndexes.isEmpty()){
+                break;
+            }
         }
-        return cnt;
+        return cnt+1;
     }
 
     public static int minCount2(){
@@ -87,7 +91,7 @@ public class ChoosingProblem {
                     int b = Integer.parseInt(t1.split(" ")[1]);
                     return a-b;
                 });
-                ArrayList<Integer> outerIndexes = new ArrayList<>();
+                outerIndexes = new ArrayList<>();
                 for(int i = 0; i < n; i++){
                     String[] str = data.get(i).split(" ");
                     begin[i] = Integer.parseInt(str[0]);
@@ -95,7 +99,7 @@ public class ChoosingProblem {
                     outerIndexes.add(i);
                 }
 
-                System.out.println("Result#"+(k+1)+": "+ minCount(outerIndexes));
+                System.out.println("Result#"+(k+1)+": "+ minCount());
 
             }
 
